@@ -3,6 +3,9 @@ FROM gitpod/workspace-full
 ## We use the user 'gitpod' for security reasons. Use 'root' at your risk!
 USER gitpod
 
+## Updating dependencies...
+RUN sudo apt-get update -y && sudo apt-get upgrade -yg
+
 ## We use your timezone, just in case.
 ENV tz Your/Timezone
 
@@ -19,7 +22,6 @@ RUN sudo ufw status
 RUN sudo apt-get install -yg fail2ban
 
 ## Docker installation
-RUN sudo apt-get update -y && sudo apt-get upgrade -yg
 RUN sudo apt-get remove docker docker-engine docker.io containerd runc
 RUN sudo apt-get -yg install \
     apt-transport-https \
