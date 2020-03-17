@@ -1,9 +1,9 @@
 image:
     file: .gitpod.Dockerfile
 tasks:
-    - init: 
+    - 
 ports:
     - port: 3000
-      onOpen:
+      onOpen: notify
     - port: 3001
       onOpen: ignore
