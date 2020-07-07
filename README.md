@@ -7,8 +7,17 @@ Easily deploy Rocket.Chat to GitPod in single click without Docker. For Docker i
     * If you prefer to use GitHub, an mirror is ready for you. [Simply open this link instead.](https://gitpod.io/#https://github.com/AndreiJirohHaliliDev2006/deploy2gitpod-rocket.chat)
 
 ## How To Deploy
-* Click the **Deploy to GitPod** button below and sign in when prompted.
+* Open this repo in Gitpod.
+```
+https://gitpod.io/#gitlab.com/deploy2gitpod-templates/rocket.chat
+```
 
-[![https://camo.githubusercontent.com/1eb1ddfea6092593649f0117f7262ffa8fbd3017/68747470733a2f2f676974706f642e696f2f627574746f6e2f6f70656e2d696e2d676974706f642e737667]()](https://gitpod.io/#https://gitlab.com/AndreiJirohHaliliDev2006/rocket.chat-deploy-to-gitpod)
+* It automatically install the dependencies for you during image build.
 
-* It automatically install the dependencies for you. Once you are done, it will open the preview automatically.
+* Open an terminal and do the follwoing:
+    * Edit the L10 of `/lib/systemd/system/rocketchat.service` with `nano`, find `http://localhost:3000/`
+    and change it into `https://3000-<workspace-id>.ws-<region-here>.gitpod.io`. Don't forget to replace `<workspace id>`
+    to your Gitpod workspace ID and `<region-here>` with the region stuff such as `<us02>`.
+    * Type `systemctl enable rocketchat && systemctl start rocketchat` to launch Rocket.Chat.
+
+* Then open an new tab pointing to that port and complete setup.

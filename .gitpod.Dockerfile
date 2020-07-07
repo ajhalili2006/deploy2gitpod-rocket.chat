@@ -1,39 +1,39 @@
 FROM gitpod/workspace-full
 
-## We use the user 'gitpod' for security reasons. Use 'root' at your risk!
-USER gitpod
+# Sorry, we're gonna go wild. Beware of using root!
+USER root
 
-## Updating dependencies...
-RUN sudo apt-get update -y && sudo apt-get upgrade -yg
+# Because we're installing in Ubuntu, set this var into noninteractive.
+ENV DEBIAN_FRONTEND noninteractive
 
-## We use your timezone, just in case.
-ENV tz Your/Timezone
+# Install MongoDB
+RUN apt-get -y update
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+RUN echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" |  tee /etc/apt/sources.list.d/mongodb-org-4.0.list
 
-## Securing your GitPod server
-RUN sudo apt-get -yg install ufw
-RUN sudo ufw default deny incoming
-RUN sudo ufw default allow outgoing
-RUN sudo ufw allow 22/tcp
-RUN sudo ufw allow 443/tcp
-RUN sudo ufw enable
-RUN sudo ufw status
+# We're not using NVM because we're installing Node.js globally.
+RUN RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
+RUN apt-get install --yes nodejs
+RUN apt-get install -y build-essential mongodb-org graphicsmagick
 
-## Force-brute attacks protection
-RUN sudo apt-get install -yg fail2ban
+# Install the needed tools.
+RUN apt-get install -y build-essential mongodb-org nodejs graphicsmagick
 
-## Docker installation
-RUN sudo apt-get remove docker docker-engine docker.io containerd runc
-RUN sudo apt-get -yg install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common
-RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-RUN sudo apt-key fingerprint 0EBFCD88
-RUN 
+# Pull stuff
+RUN curl -L https://releases.rocket.chat/latest/download -o /tmp/rocket.chat.tgz
+RUN tar -xzf /tmp/rocket.chat.tgz -C /tmp
 
-## Docker Compose Installation
-RUN sudo curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-RUN sudo chmod +x /usr/local/bin/docker-compose
-RUN sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+# Create an user called 'rocketchat' and adjust perms.
+RUN useradd -M rocketchat && usermod -L rocketchat
+RUN chown -R rocketchat:rocketchat /opt/Rocket.Chat
+
+# Use my script for automating stuff.
+RUN curl -sL https://gist.githubusercontent.com/AndreiJirohHaliliDev2006/5fac9c422c80eaa96b01cde1823eacce/raw/a294375e06e4261a8302a080ee9f5fe337d78e14/RocketChat-CatStuffToSystemd.sh | bash
+
+# Setup storage engine and replication for MongoDB
+RUN sed -i "s/^#  engine:/  engine: mmapv1/"  /etc/mongod.conf
+RUN sed -i "s/^#replication:/replication:\n  replSetName: rs01/" /etc/mongod.conf
+
+# Start MongoDB
+RUN systemctl enable mongod && systemctl start mongod
+RUN mongo --eval "printjson(rs.initiate())"
