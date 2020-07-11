@@ -8,11 +8,13 @@ ENV DEBIAN_FRONTEND noninteractive
 # Just install the Meteor app.
 RUN curl https://install.meteor.com/ | sh
 
-# Then set our working directory to root workspace directory.
-WORKDIR /workspace
+# Setup our launchpad
+WORKDIR /
 
-# Clone the repo!
-RUN git clone https://github.com/RocketChat/Rocket.Chat.git RocketChat-Dev
+# Clone REEEEEE
+RUN sudo git clone https://github.com/RocketChat/Rocket.Chat.git app
+RUN sudo chown gitpod /app/
 
 # Install deps
+WORKDIR /app
 RUN meteor npm install
