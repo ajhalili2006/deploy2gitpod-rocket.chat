@@ -6,7 +6,7 @@ USER gitpod
 ENV DEBIAN_FRONTEND noninteractive
 
 # Just install the Meteor app.
-curl https://install.meteor.com/ | sh
+RUN curl https://install.meteor.com/ | sh
 
 # Then set our working directory to root workspace directory.
 WORKDIR /workspace

@@ -15,7 +15,8 @@ Easily deploy Rocket.Chat to GitPod in single click without Docker.
 
 * Open this repo in Gitpod by prefixing the repo link with `gitpod.io/#` and hit Enter. Wait for build to finish.
 
-* The image contains Meteor installation which automatically install Node.js and MongoDB for you.
+* The image contains Meteor installation which automatically install Node.js and MongoDB for you. On first build with `meteor npm start`,
+this might take up to 10 minutes or longer. Please be patient.
 
 * After the build and you're on the VS Code screen on your browser, open terminal and do the following:
     * Change your working directory to our own copy of the Rocket.Chat repo with `cd ../RocketChat-Dev`.
