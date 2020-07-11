@@ -1,23 +1,31 @@
 # Rocket.Chat Deploy to GitPod
 
-Easily deploy Rocket.Chat to GitPod in single click without Docker. For Docker installations
+Easily deploy Rocket.Chat to GitPod in single click without Docker.
+
+> **WARNING!**: We'll clone the whole Rocket.Chat repo on the `develop` branch which is unstable. Check the release notes
+> for any latest release and checkout to that release ith `git checkout release-X.Y.Z` where `X.Y.Z` are the target version
+> to checkout.
 
 ## What Do You Need
 * A GitLab account on `gitlab.com` to sign in with GitPod and clone this repo.
     * If you prefer to use GitHub, an mirror is ready for you. [Simply open this link instead.](https://gitpod.io/#https://github.com/AndreiJirohHaliliDev2006/deploy2gitpod-rocket.chat)
 
 ## How To Deploy
-* Open this repo in Gitpod.
-```
-https://gitpod.io/#gitlab.com/deploy2gitpod-templates/rocket.chat
-```
+> We recommend to see the [Quick Start for Devs](https://docs.rocket.chat/guides/developer/quick-start) for details.
 
-* It automatically install the dependencies for you during image build.
+* Open this repo in Gitpod by prefixing the repo link with `gitpod.io/#` and hit Enter. Wait for build to finish.
 
-* Open an terminal and do the follwoing:
-    * Edit the L10 of `/lib/systemd/system/rocketchat.service` with `nano`, find `http://localhost:3000/`
-    and change it into `https://3000-<workspace-id>.ws-<region-here>.gitpod.io`. Don't forget to replace `<workspace id>`
-    to your Gitpod workspace ID and `<region-here>` with the region stuff such as `<us02>`.
-    * Type `systemctl enable rocketchat && systemctl start rocketchat` to launch Rocket.Chat.
+* The image contains Meteor installation which automatically install Node.js and MongoDB for you.
 
-* Then open an new tab pointing to that port and complete setup.
+* After the build and you're on the VS Code screen on your browser, open terminal and do the following:
+    * Change your working directory to our own copy of the Rocket.Chat repo with `cd ../RocketChat-Dev`.
+    * Start anytime with `meteor npm start` and open the web preview for port `3000`.
+    * To stop anytime, press `Ctrl + C` on your terminal.
+
+## Updating
+* Stop your instance with `Ctrl + C` if its running.
+
+* Do `git fetch --all` then `git pull`. Resolve any merge conflicts.
+    * If you're on the `release-X.Y.Z`, visit release notes then checkout to latest release with `git checkout release-A.B.C`.
+
+* Reinstall dependencies with `meteor npm install` and warp up with `meteor npm start`.
